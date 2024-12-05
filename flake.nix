@@ -1,5 +1,5 @@
 {
-  description = "A simple Go package";
+  description = "Telegram Voice to Text Bot";
 
   inputs.nixpkgs.url = "nixpkgs/nixos-24.11";
 
