@@ -38,22 +38,22 @@
       system: let
         pkgs = nixpkgsFor.${system};
       in {
-        telegram-voice-to-text = pkgs.buildGoModule {
-          pname = "telegram-voice-to-text";
+        bot = pkgs.buildGoModule {
           inherit version;
+          pname = "bot";
           src = ./.;
-
-          vendorHash = "sha256-iTUoag4ePnNXMaLXKeWyD3jroXwLvzUAxBvzLL3rNcE=";
+          subPackages = ["cmd/bot"];
+          vendorHash = "sha256-X0i7x9mb4hW+QoXjV3NTiYqzVSuqWZt1jkYXdsU0OtE=";
         };
       }
     );
 
-    defaultPackage = forAllSystems (system: self.packages.${system}.telegram-voice-to-text);
+    defaultPackage = forAllSystems (system: self.packages.${system}.bot);
 
     apps = forAllSystems (system: {
       default = {
         type = "app";
-        program = "${self.packages.${system}.telegram-voice-to-text}/bin/telegram-voice-to-text";
+        program = "${self.packages.${system}.bot}/bin/bot";
       };
     });
 
