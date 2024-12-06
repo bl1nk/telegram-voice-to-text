@@ -15,23 +15,23 @@ import (
 )
 
 type Bot struct {
-	log          *slog.Logger
-	client       *bot.Bot
-	transcriber  *transcriber.Transcriber
-	allowedUsers []int64
+	log            *slog.Logger
+	client         *bot.Bot
+	transcriber    *transcriber.Transcriber
+	allowedUserIDs []int64
 }
 
-func New(log *slog.Logger, token string, allowedUsers []int64, transcriber *transcriber.Transcriber) (*Bot, error) {
+func New(log *slog.Logger, token string, allowedUserIDs []int64, transcriber *transcriber.Transcriber) (*Bot, error) {
 	client, err := bot.New(token, bot.WithDefaultHandler(defaultHandler(log)))
 	if err != nil {
 		return nil, err
 	}
 
 	b := &Bot{
-		log:          log,
-		client:       client,
-		allowedUsers: allowedUsers,
-		transcriber:  transcriber,
+		log:            log,
+		client:         client,
+		allowedUserIDs: allowedUserIDs,
+		transcriber:    transcriber,
 	}
 
 	b.client.RegisterHandler(bot.HandlerTypeMessageText, "/start", bot.MatchTypeExact, b.startHandler)
@@ -56,7 +56,7 @@ func (b *Bot) startHandler(ctx context.Context, t *bot.Bot, update *models.Updat
 }
 
 func (b *Bot) shouldHandleVoiceMessage(update *models.Update) bool {
-	isAllowedUser := slices.Contains(b.allowedUsers, update.Message.From.ID)
+	isAllowedUser := slices.Contains(b.allowedUserIDs, update.Message.From.ID)
 	hasVoice := update.Message.Voice != nil
 	return isAllowedUser && hasVoice
 }

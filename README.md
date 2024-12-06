@@ -10,9 +10,8 @@ Set the following environment variables:
 
 - `TELEGRAM_BOT_TOKEN`: Your Telegram bot token.
 - `OPENAI_API_KEY`: Your OpenAI API key.
-- `ALLOWED_USERS`: Comma-separated list of Telegram user IDs.
-   The Bot logs messages it receives from users.
-   The user ID is included in the log message.
+- `ALLOWED_USER_IDS`: Comma-separated list of Telegram user IDs.
+  Messages sent to the bot are logged and include the user ID.
 
 ## Development
 

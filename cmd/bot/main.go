@@ -13,7 +13,7 @@ import (
 type config struct {
 	TelegramBotToken string  `env:"TELEGRAM_BOT_TOKEN"`
 	OpenAIAPIKey     string  `env:"OPENAI_API_KEY"`
-	AllowedUsers     []int64 `env:"ALLOWED_USERS"`
+	AllowedUserIDs   []int64 `env:"ALLOWED_USER_IDS"`
 }
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 
 	t := transcriber.New()
 
-	b, err := bot.New(logger, c.TelegramBotToken, c.AllowedUsers, t)
+	b, err := bot.New(logger, c.TelegramBotToken, c.AllowedUserIDs, t)
 	if err != nil {
 		logger.Error("new bot", "error", err)
 		os.Exit(1)
