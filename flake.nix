@@ -62,7 +62,7 @@
       pkgs,
       ...
     }: {
-      options.services.telegram-voice-to-text-bot = {
+      options.services.telegram-voice-to-text = {
         enable = lib.mkEnableOption "Telegram Voice to Text Bot";
         environmentFile = lib.mkOption {
           default = null;
@@ -70,8 +70,8 @@
           type = with lib.types; nullOr path;
         };
       };
-      config = lib.mkIf config.services.telegram-voice-to-text-bot.enable {
-        systemd.services.telegram-voice-to-text-bot = {
+      config = lib.mkIf config.services.telegram-voice-to-text.enable {
+        systemd.services.telegram-voice-to-text = {
           description = "Telegram Voice to Text Bot";
           wantedBy = ["multi-user.target"];
           after = ["network.target"];
@@ -80,7 +80,7 @@
             DynamicUser = true;
             ExecStart = "${self.packages.${pkgs.system}.default}/bin/bot";
             Restart = "always";
-            EnvironmentFile = config.services.telegram-voice-to-text-bot.environmentFile;
+            EnvironmentFile = config.services.telegram-voice-to-text.environmentFile;
           };
         };
       };
