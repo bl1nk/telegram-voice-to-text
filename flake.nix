@@ -38,7 +38,7 @@
       system: let
         pkgs = nixpkgsFor.${system};
       in {
-        bot = pkgs.buildGoModule {
+        default = pkgs.buildGoModule {
           inherit version;
           pname = "bot";
           src = ./.;
@@ -47,15 +47,44 @@
         };
       }
     );
-
-    defaultPackage = forAllSystems (system: self.packages.${system}.bot);
+    defaultPackage = forAllSystems (system: self.packages.${system}.default);
 
     apps = forAllSystems (system: {
       default = {
         type = "app";
-        program = "${self.packages.${system}.bot}/bin/bot";
+        program = "${self.packages.${system}.default}/bin/bot";
       };
     });
+
+    nixosModules.default = {
+      config,
+      lib,
+      pkgs,
+      ...
+    }: {
+      options.services.telegram-voice-to-text-bot = {
+        enable = lib.mkEnableOption "Telegram Voice to Text Bot";
+        environmentFile = lib.mkOption {
+          default = null;
+          description = "Path to the environment file";
+          type = with lib.types; nullOr path;
+        };
+      };
+      config = lib.mkIf config.services.telegram-voice-to-text-bot.enable {
+        systemd.services.telegram-voice-to-text-bot = {
+          description = "Telegram Voice to Text Bot";
+          wantedBy = ["multi-user.target"];
+          after = ["network.target"];
+          serviceConfig = {
+            Type = "simple";
+            DynamicUser = true;
+            ExecStart = "${self.packages.${pkgs.system}.default}/bin/bot";
+            Restart = "always";
+            EnvironmentFile = config.services.telegram-voice-to-text-bot.environmentFile;
+          };
+        };
+      };
+    };
 
     formatter = forAllSystems (
       system: let
