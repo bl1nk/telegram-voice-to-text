@@ -11,8 +11,8 @@ import (
 )
 
 type config struct {
-	TelegramBotToken string  `env:"TELEGRAM_BOT_TOKEN"`
-	OpenAIAPIKey     string  `env:"OPENAI_API_KEY"`
+	TelegramBotToken string  `env:"TELEGRAM_BOT_TOKEN, required"`
+	OpenAIAPIKey     string  `env:"OPENAI_API_KEY, required"`
 	AllowedUserIDs   []int64 `env:"ALLOWED_USER_IDS"`
 }
 
